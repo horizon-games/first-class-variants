@@ -9,8 +9,8 @@ PRs are welcome!
 # Example
 
 ```rust
-#[first_class_variants]
-#[derive(Debug, PartialEq, Eq, Copy, Clone)]
+#[first_class_variants(derive(Debug, PartialEq, Eq, Copy, Clone))]
+#[derive(Debug)]
 enum Foo {
     Bar(u8),
     Spam { ham: u16, eggs: u32 },
@@ -20,6 +20,7 @@ enum Foo {
 transforms into
 
 ```rust
+#[derive(Debug)]
 enum Foo {
     Bar(Bar),
     Spam(Spam),

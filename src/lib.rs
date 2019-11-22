@@ -2,10 +2,11 @@ extern crate proc_macro;
 use proc_macro::TokenStream;
 use proc_macro2::{Ident, Span};
 use quote::quote;
-use syn::{parse_macro_input, Fields, ItemEnum, Token};
+use syn::{parse_macro_input, AttributeArgs, Fields, ItemEnum, Token};
 
 #[proc_macro_attribute]
-pub fn first_class_variants(_attr: TokenStream, item: TokenStream) -> TokenStream {
+pub fn first_class_variants(attr: TokenStream, item: TokenStream) -> TokenStream {
+    let attr_args = parse_macro_input!(attr as AttributeArgs);
     let input = parse_macro_input!(item as ItemEnum);
     let name = &input.ident;
     let attrs = &input.attrs;
@@ -26,7 +27,9 @@ pub fn first_class_variants(_attr: TokenStream, item: TokenStream) -> TokenStrea
             _ => Some(<Token!(;)>::default()),
         };
         quote! {
-            #(#attrs)*
+            #(
+                #[#attr_args]
+            )*
             pub struct #struct_ident #fields #semicolon
             impl Into<#name> for #struct_ident {
                 fn into(self) -> #name {
@@ -43,6 +46,7 @@ pub fn first_class_variants(_attr: TokenStream, item: TokenStream) -> TokenStrea
         }
     });
     let result = quote! {
+        #(#attrs)*
         enum #name {
             #(#wrapper_variants,)*
         }
