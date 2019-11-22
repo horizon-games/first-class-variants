@@ -9,8 +9,8 @@ enum Foo {
 
 #[test]
 fn works() {
-    let bar = Bar(1);
-    let spam = Spam { ham: 2, eggs: 3 };
+    let bar = FooBar(1);
+    let spam = FooSpam { ham: 2, eggs: 3 };
 
     let bar_spam: Foo = bar.into();
     match bar_spam {

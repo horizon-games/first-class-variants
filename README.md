@@ -26,16 +26,16 @@ enum Foo {
 }
 
 #[derive(Debug, PartialEq, Eq, Copy, Clone)]
-struct Bar(u8);
-impl Into<Foo> for Bar {
+struct FooBar(u8);
+impl Into<Foo> for FooBar {
     fn into(self) -> Foo {
         Foo::Bar(self)
     }
 }
 
 #[derive(Debug, PartialEq, Eq, Copy, Clone)]
-struct Spam { ham: u16, eggs: u32 };
-impl Into<Foo> for Spam {
+struct FooSpam { ham: u16, eggs: u32 };
+impl Into<Foo> for FooSpam {
     fn into(self) -> Foo {
         Foo::Spam(self)
     }
