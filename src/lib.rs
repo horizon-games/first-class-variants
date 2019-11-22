@@ -1,13 +1,10 @@
 extern crate proc_macro;
 use proc_macro::TokenStream;
 use quote::quote;
-use syn::{
-    parse_macro_input, punctuated::Punctuated, token, Field, Fields, FieldsUnnamed, ItemEnum,
-    Token, Variant, Visibility,
-};
+use syn::{parse_macro_input, Fields, ItemEnum, Token};
 
 #[proc_macro_attribute]
-pub fn first_class_variants(attr: TokenStream, item: TokenStream) -> TokenStream {
+pub fn first_class_variants(_attr: TokenStream, item: TokenStream) -> TokenStream {
     let input = parse_macro_input!(item as ItemEnum);
     let name = &input.ident;
     let attrs = &input.attrs;
