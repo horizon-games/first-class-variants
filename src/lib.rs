@@ -15,21 +15,13 @@ pub fn first_class_variants(attr: TokenStream, item: TokenStream) -> TokenStream
     let variant_structs = variants.iter().map(|v| {
         let ident = &v.ident;
         let fields = &v.fields;
-        let struct_def = match &v.fields {
-            Fields::Named(_) => {
-                quote! {
-                    pub struct #ident #fields
-                }
-            }
-            _ => {
-                quote! {
-                    pub struct #ident #fields;
-                }
-            }
+        let semicolon = match &v.fields {
+            Fields::Named(_) => None,
+            _ => Some(<Token!(;)>::default()),
         };
         quote! {
             #(#attrs)*
-            #struct_def
+            pub struct #ident #fields #semicolon
             impl Into<#name> for #ident {
                 fn into(self) -> #name {
                     #name::#ident(self)
