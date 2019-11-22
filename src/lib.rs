@@ -8,6 +8,7 @@ use syn::{parse_macro_input, AttributeArgs, Fields, ItemEnum, Token};
 pub fn first_class_variants(attr: TokenStream, item: TokenStream) -> TokenStream {
     let attr_args = parse_macro_input!(attr as AttributeArgs);
     let input = parse_macro_input!(item as ItemEnum);
+    let vis = &input.vis;
     let name = &input.ident;
     let attrs = &input.attrs;
     let variants = &input.variants;
@@ -47,7 +48,7 @@ pub fn first_class_variants(attr: TokenStream, item: TokenStream) -> TokenStream
     });
     let result = quote! {
         #(#attrs)*
-        enum #name {
+        #vis enum #name {
             #(#wrapper_variants,)*
         }
         #(#variant_structs)*
