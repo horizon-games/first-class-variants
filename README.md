@@ -25,8 +25,8 @@ enum Foo {
     Bar(FooBar),
     Spam(FooSpam),
 }
-struct FooBar(u8);
-struct FooSpam { ham: u16, eggs: u32 };
+struct FooBar(pub u8);
+struct FooSpam { pub ham: u16, pub eggs: u32 };
 ```
 
 It'll also generate an `impl From<StructName> for Foo` and an `impl TryFrom<Foo> for StructName` for each struct.

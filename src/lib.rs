@@ -2,7 +2,10 @@ extern crate proc_macro;
 use proc_macro::TokenStream;
 use proc_macro2::{Ident, Span};
 use quote::quote;
-use syn::{parse_macro_input, AttributeArgs, Fields, ItemEnum, Token};
+use syn::{
+    parse_macro_input, punctuated::Punctuated, AttributeArgs, Field, Fields, ItemEnum, Token,
+    VisPublic,
+};
 
 #[proc_macro_attribute]
 pub fn first_class_variants(attr: TokenStream, item: TokenStream) -> TokenStream {
@@ -22,7 +25,13 @@ pub fn first_class_variants(attr: TokenStream, item: TokenStream) -> TokenStream
     let variant_structs = variants.iter().map(|v| {
         let variant_ident = &v.ident;
         let struct_ident = make_struct_ident(variant_ident);
-        let fields = &v.fields;
+        let mut fields = v.fields.clone();
+        match &mut fields {
+            Fields::Named(named) => make_pub(&mut named.named),
+            Fields::Unnamed(unnamed) => make_pub(&mut unnamed.unnamed),
+            _ => {}
+        }
+
         let semicolon = match &v.fields {
             Fields::Named(_) => None,
             _ => Some(<Token!(;)>::default()),
@@ -63,4 +72,13 @@ pub fn first_class_variants(attr: TokenStream, item: TokenStream) -> TokenStream
         #(#variant_structs)*
     };
     result.into()
+}
+
+fn make_pub(punctuated: &mut Punctuated<Field, Token![,]>) {
+    for field in punctuated.iter_mut() {
+        field.vis = VisPublic {
+            pub_token: <Token![pub]>::default(),
+        }
+        .into();
+    }
 }
