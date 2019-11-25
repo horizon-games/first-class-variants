@@ -26,4 +26,11 @@ fn works() {
 
     let maybe_bar: Result<FooBar, ()> = bar_foo.try_into();
     assert_eq!(maybe_bar, Ok(bar));
+
+    // A useful pattern for pulling things out of a Foo
+    assert!(if let Ok(FooBar(_)) = maybe_bar {
+        true
+    } else {
+        false
+    });
 }
