@@ -32,9 +32,9 @@ pub fn first_class_variants(attr: TokenStream, item: TokenStream) -> TokenStream
                 #[#attr_args]
             )*
             pub struct #struct_ident #fields #semicolon
-            impl Into<#name> for #struct_ident {
-                fn into(self) -> #name {
-                    #name::#variant_ident(self)
+            impl From<#struct_ident> for #name {
+                fn from(subtype_struct: #struct_ident) -> Self {
+                    #name::#variant_ident(subtype_struct)
                 }
             }
         }
