@@ -1,9 +1,11 @@
 mod generated {
     use first_class_variants::first_class_variants;
-    #[first_class_variants(derive(Debug, PartialEq, Eq, Copy, Clone))]
+    #[first_class_variants(derive(PartialEq, Eq, Copy, Clone))]
     #[derive(Debug)]
     pub enum Foo {
+        #[derive(Debug)]
         Bar(u8),
+        #[derive(Debug)]
         Spam { ham: u16, eggs: u32 },
     }
 }

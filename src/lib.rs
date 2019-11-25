@@ -13,7 +13,7 @@ pub fn first_class_variants(attr: TokenStream, item: TokenStream) -> TokenStream
     let input = parse_macro_input!(item as ItemEnum);
     let vis = &input.vis;
     let name = &input.ident;
-    let attrs = &input.attrs;
+    let enum_attrs = &input.attrs;
     let variants = &input.variants;
 
     let make_struct_ident = |variant_ident: &Ident| {
@@ -24,6 +24,7 @@ pub fn first_class_variants(attr: TokenStream, item: TokenStream) -> TokenStream
     };
     let variant_structs = variants.iter().map(|v| {
         let variant_ident = &v.ident;
+        let variant_attrs = &v.attrs;
         let struct_ident = make_struct_ident(variant_ident);
         let mut fields = v.fields.clone();
         match &mut fields {
@@ -40,6 +41,7 @@ pub fn first_class_variants(attr: TokenStream, item: TokenStream) -> TokenStream
             #(
                 #[#attr_args]
             )*
+            #(#variant_attrs)*
             pub struct #struct_ident #fields #semicolon
             impl From<#struct_ident> for #name {
                 fn from(subtype_struct: #struct_ident) -> Self {
@@ -65,7 +67,7 @@ pub fn first_class_variants(attr: TokenStream, item: TokenStream) -> TokenStream
         }
     });
     let result = quote! {
-        #(#attrs)*
+        #(#enum_attrs)*
         #vis enum #name {
             #(#wrapper_variants,)*
         }

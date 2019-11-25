@@ -9,10 +9,12 @@ PRs are welcome!
 # Example
 
 ```rust
-#[first_class_variants(derive(Debug, PartialEq, Eq, Copy, Clone))]
+#[first_class_variants(derive(PartialEq, Eq, Copy, Clone))]
 #[derive(Debug)]
 enum Foo {
+    #[derive(Debug)]
     Bar(u8),
+    #[derive(Debug)]
     Spam { ham: u16, eggs: u32 },
 }
 ```
@@ -22,7 +24,9 @@ will generate an enum and 2 structs:
 ```rust
 #[derive(Debug)]
 enum Foo {
+    #[derive(Debug)]
     Bar(FooBar),
+    #[derive(Debug)]
     Spam(FooSpam),
 }
 struct FooBar(pub u8);
@@ -34,6 +38,13 @@ It'll also generate an `impl From<StructName> for Foo` and an `impl TryFrom<Foo>
 Those generated structs will be given every attribute passed into the args of `first_class_variants(...)` - e.g.
 
 ```rust
-#[derive(Debug, PartialEq, Eq, Copy, Clone)]
+#[derive(PartialEq, Eq, Copy, Clone)]
+struct FooBar(u8);
+```
+
+as well as any attributes on that specific variant.
+
+```rust
+#[derive(Debug)]
 struct FooBar(u8);
 ```
