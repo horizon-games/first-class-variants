@@ -37,6 +37,15 @@ pub fn first_class_variants(attr: TokenStream, item: TokenStream) -> TokenStream
                     #name::#variant_ident(subtype_struct)
                 }
             }
+            impl std::convert::TryFrom<#name> for #struct_ident {
+                type Error = (); // There's only one possible error - enum variant isn't this struct.
+                fn try_from(enum_variant: #name) -> Result<Self, Self::Error> {
+                    match enum_variant {
+                        #name::#variant_ident(subtype_struct) => Ok(subtype_struct),
+                        _ => Err(())
+                    }
+                }
+            }
         }
     });
     let wrapper_variants = variants.iter().map(|v| {
