@@ -38,5 +38,13 @@ mod tests {
         } else {
             false
         });
+
+        // or, do it by ref!
+        assert!(if let &Ok(FooBar(x)) = &Foo::Bar(FooBar(123)).try_into() {
+            println!("{}", x);
+            true
+        } else {
+            false
+        });
     }
 }
